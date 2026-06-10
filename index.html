@@ -1,155 +1,531 @@
-<div class="max-w-6xl mx-auto p-8 bg-gray-50 text-gray-900 font-sans">
-  
-  <header class="border-b border-gray-200 pb-6 mb-8">
-    <div class="flex justify-between items-baseline">
-      <div>
-        <h1 class="text-3xl font-bold tracking-tight">Austin Facilities Compliance</h1>
-        <p class="text-sm text-gray-500 mt-1">Portfolio Oversight: Austin Northwest (AUS-1) & Austin Downtown (AUS-2)</p>
+<!DOCTYPE html>
+<html lang="en" data-theme="dark">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Facilities Safety Dashboard</title>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=Inter:wght@300..700&family=JetBrains+Mono:wght@400;500&display=swap" rel="stylesheet">
+<script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
+<script src="https://cdn.jsdelivr.net/npm/lucide@latest/dist/umd/lucide.min.js"></script>
+<style>
+:root,[data-theme="light"]{--color-bg:#f7f6f2;--color-surface:#f9f8f5;--color-surface-2:#fbfbf9;--color-surface-offset:#f3f0ec;--color-surface-dynamic:#e6e4df;--color-divider:#dcd9d5;--color-border:#d4d1ca;--color-text:#28251d;--color-text-muted:#7a7974;--color-text-faint:#bab9b4;--color-text-inverse:#f9f8f4;--color-primary:#01696f;--color-primary-hover:#0c4e54;--color-primary-highlight:#cedcd8;--color-warning:#964219;--color-warning-highlight:#ddcfc6;--color-error:#a12c7b;--color-error-highlight:#e0ced7;--color-success:#437a22;--color-success-highlight:#d4dfcc;--color-orange:#da7101;--color-gold:#d19900;--color-notification:#a13544;--shadow-sm:0 1px 2px oklch(0.2 0.01 80/0.06);--shadow-md:0 4px 12px oklch(0.2 0.01 80/0.08);--radius-sm:0.375rem;--radius-md:0.5rem;--radius-lg:0.75rem;--radius-xl:1rem;--radius-full:9999px;--space-1:0.25rem;--space-2:0.5rem;--space-3:0.75rem;--space-4:1rem;--space-5:1.25rem;--space-6:1.5rem;--space-8:2rem;--text-xs:clamp(0.75rem,0.7rem + 0.25vw,0.875rem);--text-sm:clamp(0.875rem,0.8rem + 0.35vw,1rem);--text-base:clamp(1rem,0.95rem + 0.25vw,1.125rem);--text-lg:clamp(1.125rem,1rem + 0.75vw,1.5rem);--text-xl:clamp(1.5rem,1.2rem + 1.25vw,2.25rem);--font-body:'Inter','Helvetica Neue',sans-serif;--font-mono:'JetBrains Mono',monospace;--transition:180ms cubic-bezier(0.16,1,0.3,1)}
+[data-theme="dark"]{--color-bg:#171614;--color-surface:#1c1b19;--color-surface-2:#201f1d;--color-surface-offset:#252420;--color-surface-dynamic:#2d2c2a;--color-divider:#262523;--color-border:#393836;--color-text:#cdccca;--color-text-muted:#797876;--color-text-faint:#5a5957;--color-text-inverse:#2b2a28;--color-primary:#4f98a3;--color-primary-hover:#227f8b;--color-primary-highlight:#1e3337;--color-warning:#bb653b;--color-warning-highlight:#3d2e24;--color-error:#d163a7;--color-error-highlight:#3a2535;--color-success:#6daa45;--color-success-highlight:#243318;--color-orange:#fdab43;--color-gold:#e8af34;--color-notification:#dd6974;--shadow-sm:0 1px 2px oklch(0 0 0/0.25);--shadow-md:0 4px 12px oklch(0 0 0/0.35)}
+*,*::before,*::after{box-sizing:border-box;margin:0;padding:0}
+html{-webkit-font-smoothing:antialiased;scroll-behavior:smooth}
+body{min-height:100dvh;font-family:var(--font-body);font-size:var(--text-sm);color:var(--color-text);background:var(--color-bg);display:flex}
+button{cursor:pointer;background:none;border:none;font:inherit;color:inherit}
+table{border-collapse:collapse;width:100%}
+:focus-visible{outline:2px solid var(--color-primary);outline-offset:3px;border-radius:var(--radius-sm)}
+@media(prefers-reduced-motion:reduce){*,*::before,*::after{animation-duration:.01ms!important;transition-duration:.01ms!important}}
+
+/* SIDEBAR */
+.sidebar{width:240px;min-height:100dvh;background:var(--color-surface);border-right:1px solid var(--color-border);display:flex;flex-direction:column;position:sticky;top:0;height:100dvh;flex-shrink:0;overflow-y:auto}
+.sidebar-logo{padding:var(--space-5);border-bottom:1px solid var(--color-divider);display:flex;align-items:center;gap:var(--space-3)}
+.logo-text{font-size:var(--text-sm);font-weight:700;line-height:1.2}
+.logo-sub{font-size:var(--text-xs);color:var(--color-text-muted)}
+.sidebar-section{padding:var(--space-4) var(--space-3) var(--space-2)}
+.section-label{font-size:var(--text-xs);font-weight:600;text-transform:uppercase;letter-spacing:.08em;color:var(--color-text-faint);padding:0 var(--space-2) var(--space-2)}
+.nav-item{display:flex;align-items:center;gap:var(--space-3);padding:var(--space-2) var(--space-3);border-radius:var(--radius-md);color:var(--color-text-muted);font-size:var(--text-sm);cursor:pointer;width:100%;text-align:left;transition:background var(--transition),color var(--transition)}
+.nav-item:hover{background:var(--color-surface-offset);color:var(--color-text)}
+.nav-item.active{background:var(--color-primary-highlight);color:var(--color-primary);font-weight:600}
+.nav-badge{margin-left:auto;background:var(--color-notification);color:#fff;font-size:.65rem;font-weight:700;padding:2px 6px;border-radius:var(--radius-full)}
+.nav-badge.warn{background:var(--color-warning)}
+.sidebar-bottom{margin-top:auto;padding:var(--space-4) var(--space-3);border-top:1px solid var(--color-divider)}
+.user-card{display:flex;align-items:center;gap:var(--space-3);padding:var(--space-2)}
+.user-avatar{width:32px;height:32px;border-radius:var(--radius-full);background:var(--color-primary-highlight);display:flex;align-items:center;justify-content:center;font-weight:700;font-size:var(--text-xs);color:var(--color-primary);flex-shrink:0}
+.user-name{font-size:var(--text-sm);font-weight:600}
+.user-role{font-size:var(--text-xs);color:var(--color-text-muted)}
+
+/* MAIN */
+.main-content{flex:1;min-width:0;display:flex;flex-direction:column}
+.topbar{background:var(--color-surface);border-bottom:1px solid var(--color-border);padding:var(--space-3) var(--space-6);display:flex;align-items:center;justify-content:space-between;position:sticky;top:0;z-index:100}
+.page-title{font-size:var(--text-lg);font-weight:700}
+.page-sub{font-size:var(--text-xs);color:var(--color-text-muted);margin-top:1px}
+.topbar-right{display:flex;align-items:center;gap:var(--space-3)}
+.btn{display:inline-flex;align-items:center;gap:var(--space-2);padding:var(--space-2) var(--space-4);border-radius:var(--radius-md);font-size:var(--text-sm);font-weight:500;cursor:pointer;border:1px solid transparent;transition:background var(--transition)}
+.btn-primary{background:var(--color-primary);color:var(--color-text-inverse)}
+.btn-primary:hover{background:var(--color-primary-hover)}
+.btn-ghost{color:var(--color-text-muted);border-color:var(--color-border)}
+.btn-ghost:hover{background:var(--color-surface-offset);color:var(--color-text)}
+.theme-toggle{padding:var(--space-2);border-radius:var(--radius-md);color:var(--color-text-muted);transition:background var(--transition)}
+.theme-toggle:hover{background:var(--color-surface-offset);color:var(--color-text)}
+.fac-tabs{display:flex;gap:var(--space-2)}
+.fac-tab{padding:var(--space-1) var(--space-3);border-radius:var(--radius-sm);font-size:var(--text-xs);font-weight:600;cursor:pointer;border:1px solid var(--color-border);color:var(--color-text-muted);transition:background var(--transition),color var(--transition)}
+.fac-tab.active{background:var(--color-primary);color:#fff;border-color:var(--color-primary)}
+.fac-tab:hover:not(.active){background:var(--color-surface-offset)}
+
+/* ALERT */
+.alert-banner{padding:var(--space-3) var(--space-5);display:flex;align-items:center;gap:var(--space-3);font-size:var(--text-xs);font-weight:600;background:color-mix(in oklch,var(--color-notification) 12%,var(--color-surface));color:var(--color-notification);border-bottom:1px solid color-mix(in oklch,var(--color-notification) 25%,var(--color-border))}
+
+/* PAGE */
+.page-body{padding:var(--space-6);display:flex;flex-direction:column;gap:var(--space-6)}
+
+/* KPI */
+.kpi-grid{display:grid;grid-template-columns:repeat(auto-fill,minmax(min(180px,100%),1fr));gap:var(--space-4)}
+.kpi-card{background:var(--color-surface);border:1px solid var(--color-border);border-radius:var(--radius-lg);padding:var(--space-5);box-shadow:var(--shadow-sm);display:flex;flex-direction:column;gap:var(--space-2)}
+.kpi-label{font-size:var(--text-xs);font-weight:600;text-transform:uppercase;letter-spacing:.06em;color:var(--color-text-muted);display:flex;align-items:center;gap:var(--space-2)}
+.kpi-value{font-size:var(--text-xl);font-weight:700;font-variant-numeric:tabular-nums lining-nums;line-height:1}
+.kpi-delta{font-size:var(--text-xs);color:var(--color-text-muted);display:flex;align-items:center;gap:var(--space-1)}
+.c-success{color:var(--color-success)}.c-warning{color:var(--color-warning)}.c-error{color:var(--color-notification)}.c-primary{color:var(--color-primary)}
+
+/* CARD */
+.card{background:var(--color-surface);border:1px solid var(--color-border);border-radius:var(--radius-lg);box-shadow:var(--shadow-sm);overflow:hidden}
+.card-header{padding:var(--space-4) var(--space-5);border-bottom:1px solid var(--color-divider);display:flex;align-items:center;justify-content:space-between}
+.card-title{font-size:var(--text-base);font-weight:700;display:flex;align-items:center;gap:var(--space-2)}
+.card-body{padding:var(--space-5)}
+.card-footer{padding:var(--space-3) var(--space-5);border-top:1px solid var(--color-divider);font-size:var(--text-xs);color:var(--color-text-muted)}
+
+/* GRID LAYOUTS */
+.row-2{display:grid;grid-template-columns:1fr 1fr;gap:var(--space-4)}
+.row-wide{display:grid;grid-template-columns:2fr 1fr;gap:var(--space-4)}
+
+/* BADGE */
+.badge{display:inline-flex;align-items:center;gap:4px;padding:2px 8px;border-radius:var(--radius-full);font-size:var(--text-xs);font-weight:600;white-space:nowrap}
+.b-success{background:var(--color-success-highlight);color:var(--color-success)}
+.b-warn{background:var(--color-warning-highlight);color:var(--color-warning)}
+.b-error{background:color-mix(in oklch,var(--color-notification) 15%,var(--color-surface));color:var(--color-notification)}
+.b-info{background:var(--color-primary-highlight);color:var(--color-primary)}
+.b-neutral{background:var(--color-surface-offset);color:var(--color-text-muted)}
+
+/* TABLE */
+.t th{padding:var(--space-2) var(--space-4);text-align:left;font-size:var(--text-xs);font-weight:600;text-transform:uppercase;letter-spacing:.06em;color:var(--color-text-muted);background:var(--color-surface-offset);white-space:nowrap}
+.t td{padding:var(--space-3) var(--space-4);font-size:var(--text-sm);border-bottom:1px solid var(--color-divider);vertical-align:middle;font-variant-numeric:tabular-nums}
+.t tr:last-child td{border-bottom:none}
+.t tr:hover td{background:var(--color-surface-offset)}
+.iname{font-weight:600}.imeta{font-size:var(--text-xs);color:var(--color-text-muted);margin-top:2px}
+
+/* DAY PILLS */
+.dpill{display:inline-flex;align-items:center;padding:2px 8px;border-radius:var(--radius-full);font-size:var(--text-xs);font-weight:600;font-variant-numeric:tabular-nums}
+.d-ov{background:color-mix(in oklch,var(--color-notification) 15%,var(--color-surface));color:var(--color-notification)}
+.d-ur{background:var(--color-warning-highlight);color:var(--color-warning)}
+.d-ok{background:var(--color-success-highlight);color:var(--color-success)}
+.d-in{background:var(--color-primary-highlight);color:var(--color-primary)}
+
+/* PROGRESS */
+.prog-bar{flex:1;height:6px;background:var(--color-surface-dynamic);border-radius:var(--radius-full);overflow:hidden}
+.prog-fill{height:100%;border-radius:var(--radius-full);transition:width .8s cubic-bezier(0.16,1,0.3,1)}
+
+/* TIMELINE */
+.tl-item{display:flex;gap:var(--space-3);padding:var(--space-3) 0;position:relative}
+.tl-item:not(:last-child)::after{content:'';position:absolute;left:11px;top:32px;bottom:0;width:1px;background:var(--color-divider)}
+.tl-dot{width:23px;height:23px;border-radius:var(--radius-full);flex-shrink:0;display:flex;align-items:center;justify-content:center;z-index:1;font-size:10px}
+.tl-dot.ov{background:color-mix(in oklch,var(--color-notification) 15%,var(--color-surface));color:var(--color-notification)}
+.tl-dot.pend{background:var(--color-warning-highlight);color:var(--color-warning)}
+.tl-title{font-size:var(--text-sm);font-weight:600}
+.tl-meta{font-size:var(--text-xs);color:var(--color-text-muted);margin-top:2px}
+
+/* BEST PRACTICES */
+.bp-grid{display:grid;grid-template-columns:1fr 1fr;gap:var(--space-3)}
+.bp-item{padding:var(--space-4);border-radius:var(--radius-md);background:var(--color-surface-offset);border:1px solid var(--color-border)}
+.bp-num{font-size:var(--text-xs);font-weight:700;color:var(--color-primary);text-transform:uppercase;letter-spacing:.06em;margin-bottom:var(--space-1)}
+.bp-title{font-size:var(--text-sm);font-weight:700;margin-bottom:var(--space-1)}
+.bp-text{font-size:var(--text-xs);color:var(--color-text-muted);line-height:1.6}
+
+/* COMPLIANCE */
+.comp-item{display:flex;align-items:flex-start;gap:var(--space-3);padding:var(--space-3);border-radius:var(--radius-md);background:var(--color-surface-offset)}
+.comp-icon{width:28px;height:28px;border-radius:var(--radius-sm);display:flex;align-items:center;justify-content:center;flex-shrink:0;margin-top:1px}
+.comp-icon.ok{background:var(--color-success-highlight);color:var(--color-success)}
+.comp-icon.warn{background:var(--color-warning-highlight);color:var(--color-warning)}
+.comp-icon.crit{background:color-mix(in oklch,var(--color-notification) 15%,var(--color-surface));color:var(--color-notification)}
+.comp-title{font-size:var(--text-sm);font-weight:600}
+.comp-desc{font-size:var(--text-xs);color:var(--color-text-muted);margin-top:2px;line-height:1.6}
+.comp-list{display:flex;flex-direction:column;gap:var(--space-3)}
+
+/* CHART */
+.chart-wrap{padding:var(--space-5);height:250px;position:relative}
+
+/* MOBILE */
+@media(max-width:768px){.sidebar{display:none}.row-2,.row-wide{grid-template-columns:1fr}.bp-grid{grid-template-columns:1fr}.kpi-grid{grid-template-columns:repeat(2,1fr)}.topbar{padding:var(--space-3) var(--space-4)}.page-body{padding:var(--space-4)}}
+::-webkit-scrollbar{width:6px;height:6px}::-webkit-scrollbar-track{background:transparent}::-webkit-scrollbar-thumb{background:var(--color-border);border-radius:var(--radius-full)}
+</style>
+</head>
+<body>
+
+<aside class="sidebar">
+  <div class="sidebar-logo">
+    <svg width="32" height="32" viewBox="0 0 32 32" fill="none" aria-label="FaciliSafe">
+      <rect width="32" height="32" rx="8" fill="#4f98a3" opacity="0.15"/>
+      <path d="M7 10h18M7 16h12M7 22h8" stroke="#4f98a3" stroke-width="2.5" stroke-linecap="round"/>
+      <circle cx="24" cy="22" r="5" fill="#4f98a3" opacity="0.9"/>
+      <path d="M22 22l1.5 1.5 2.5-2.5" stroke="white" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round"/>
+    </svg>
+    <div><div class="logo-text">FaciliSafe</div><div class="logo-sub">Austin Operations</div></div>
+  </div>
+  <div class="sidebar-section">
+    <div class="section-label">Overview</div>
+    <button class="nav-item active"><i data-lucide="layout-dashboard" width="15" height="15"></i>Dashboard</button>
+    <button class="nav-item"><i data-lucide="clipboard-check" width="15" height="15"></i>All Inspections<span class="nav-badge">2</span></button>
+    <button class="nav-item"><i data-lucide="wrench" width="15" height="15"></i>Work Orders<span class="nav-badge warn">4</span></button>
+    <button class="nav-item"><i data-lucide="bar-chart-2" width="15" height="15"></i>Reports</button>
+  </div>
+  <div class="sidebar-section">
+    <div class="section-label">Facilities</div>
+    <button class="nav-item"><i data-lucide="building" width="15" height="15"></i>Bldg A — Tech Ridge</button>
+    <button class="nav-item"><i data-lucide="building-2" width="15" height="15"></i>Bldg B — Oak Valley</button>
+  </div>
+  <div class="sidebar-section">
+    <div class="section-label">Compliance</div>
+    <button class="nav-item"><i data-lucide="shield-check" width="15" height="15"></i>Regulations</button>
+    <button class="nav-item"><i data-lucide="star" width="15" height="15"></i>Best Practices</button>
+    <button class="nav-item"><i data-lucide="users" width="15" height="15"></i>Vendors / Contacts</button>
+  </div>
+  <div class="sidebar-bottom">
+    <div class="user-card">
+      <div class="user-avatar">SM</div>
+      <div><div class="user-name">Sarah Martinez</div><div class="user-role">Sr. Facilities Manager</div></div>
+    </div>
+  </div>
+</aside>
+
+<div class="main-content">
+  <header class="topbar">
+    <div>
+      <div class="page-title">Safety Compliance Dashboard</div>
+      <div class="page-sub">Austin, TX &middot; 2 Facilities &middot; Updated June 9, 2026</div>
+    </div>
+    <div class="topbar-right">
+      <div class="fac-tabs">
+        <button class="fac-tab active" onclick="selectFac('all',this)">All</button>
+        <button class="fac-tab" onclick="selectFac('A',this)">Bldg A</button>
+        <button class="fac-tab" onclick="selectFac('B',this)">Bldg B</button>
       </div>
-      <div class="text-right text-xs text-gray-400 font-mono">
-        Last Updated: June 2026
-      </div>
+      <button class="btn btn-ghost"><i data-lucide="download" width="14" height="14"></i>Export</button>
+      <button class="theme-toggle" onclick="toggleTheme()" aria-label="Toggle theme" id="theme-btn">
+        <svg width="17" height="17" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M21 12.79A9 9 0 1 1 11.21 3 7 7 0 0 0 21 12.79z"/></svg>
+      </button>
     </div>
   </header>
 
-  <section class="grid grid-cols-1 md:grid-cols-3 gap-6 mb-10">
-    <div class="bg-white p-6 rounded-lg border border-gray-200 shadow-sm">
-      <p class="text-xs font-semibold uppercase tracking-wider text-gray-400">Portfolio Compliance Rate</p>
-      <p class="text-4xl font-bold mt-2 text-emerald-600">91%</p>
-      <p class="text-xs text-gray-500 mt-2">Target: 100%</p>
-    </div>
-    <div class="bg-white p-6 rounded-lg border border-gray-200 shadow-sm">
-      <p class="text-xs font-semibold uppercase tracking-wider text-gray-400">Critical Red Flags</p>
-      <p class="text-4xl font-bold mt-2 text-red-600">1</p>
-      <p class="text-xs text-gray-500 mt-2">Overdue Elevator Cert (AUS-2)</p>
-    </div>
-    <div class="bg-white p-6 rounded-lg border border-gray-200 shadow-sm">
-      <p class="text-xs font-semibold uppercase tracking-wider text-gray-400">Next Major Inspection Window</p>
-      <p class="text-4xl font-bold mt-2 text-gray-800">July 01</p>
-      <p class="text-xs text-gray-500 mt-2">Annual Fire Hydrant Testing</p>
-    </div>
-  </section>
+  <div class="alert-banner">
+    <i data-lucide="alert-triangle" width="14" height="14"></i>
+    <strong>2 Overdue Items Require Immediate Action:</strong>&nbsp;Elevator Annual Cert (Bldg A) — 12 days past due &nbsp;|&nbsp; Backflow Preventer (Bldg B) — 5 days past due
+  </div>
 
-  <section class="bg-white rounded-lg border border-gray-200 shadow-sm overflow-hidden mb-10">
-    <div class="px-6 py-4 border-b border-gray-200 bg-gray-50">
-      <h2 class="text-lg font-bold text-gray-800">Live Inspection Schedule</h2>
-    </div>
-    <div class="overflow-x-auto">
-      <table class="w-full text-left border-collapse text-sm">
-        <thead>
-          <tr class="border-b border-gray-200 bg-gray-50/50 text-gray-500 font-medium">
-            <th class="p-4">Facility</th>
-            <th class="p-4">Inspection Type</th>
-            <th class="p-4">Frequency</th>
-            <th class="p-4">Last Inspected</th>
-            <th class="p-4">Next Due Date</th>
-            <th class="p-4">Status</th>
-            <th class="p-4 text-right">% Complete</th>
-          </tr>
-        </thead>
-        <tbody class="divide-y divide-gray-100">
-          <tr class="hover:bg-gray-50/50">
-            <td class="p-4 font-semibold">AUS-1 <span class="text-xs font-normal text-gray-400">(NW)</span></td>
-            <td class="p-4 text-gray-700">Fire Alarm System</td>
-            <td class="p-4 text-gray-500">Annual</td>
-            <td class="p-4 text-gray-500">Oct 12, 2025</td>
-            <td class="p-4 text-gray-500">Oct 12, 2026</td>
-            <td class="p-4">
-              <span class="inline-flex items-center gap-1.5 px-2 py-1 rounded-md text-xs font-medium bg-emerald-50 text-emerald-700">
-                <span class="w-1.5 h-1.5 rounded-full bg-emerald-500"></span> Current
-              </span>
-            </td>
-            <td class="p-4 text-right font-mono text-gray-600">100%</td>
-          </tr>
-          <tr class="hover:bg-gray-50/50">
-            <td class="p-4 font-semibold">AUS-1 <span class="text-xs font-normal text-gray-400">(NW)</span></td>
-            <td class="p-4 text-gray-700">Fire Hydrants</td>
-            <td class="p-4 text-gray-500">Annual</td>
-            <td class="p-4 text-gray-500">July 15, 2025</td>
-            <td class="p-4 text-gray-500">July 01, 2026</td>
-            <td class="p-4">
-              <span class="inline-flex items-center gap-1.5 px-2 py-1 rounded-md text-xs font-medium bg-amber-50 text-amber-700">
-                <span class="w-1.5 h-1.5 rounded-full bg-amber-500"></span> Upcoming
-              </span>
-            </td>
-            <td class="p-4 text-right font-mono text-gray-600">25%</td>
-          </tr>
-          <tr class="hover:bg-gray-50/50">
-            <td class="p-4 font-semibold">AUS-1 <span class="text-xs font-normal text-gray-400">(NW)</span></td>
-            <td class="p-4 text-gray-700">Egress/Emergency Lights</td>
-            <td class="p-4 text-gray-500">Monthly</td>
-            <td class="p-4 text-gray-500">May 28, 2026</td>
-            <td class="p-4 text-gray-500">June 28, 2026</td>
-            <td class="p-4">
-              <span class="inline-flex items-center gap-1.5 px-2 py-1 rounded-md text-xs font-medium bg-emerald-50 text-emerald-700">
-                <span class="w-1.5 h-1.5 rounded-full bg-emerald-500"></span> Current
-              </span>
-            </td>
-            <td class="p-4 text-right font-mono text-gray-600">0%</td>
-          </tr>
-          <tr class="hover:bg-gray-50/50 bg-red-50/20">
-            <td class="p-4 font-semibold">AUS-2 <span class="text-xs font-normal text-gray-400">(DT)</span></td>
-            <td class="p-4 text-gray-700">Elevator Certification</td>
-            <td class="p-4 text-gray-500">Annual</td>
-            <td class="p-4 text-gray-500">May 05, 2025</td>
-            <td class="p-4 text-red-600 font-medium">May 05, 2026</td>
-            <td class="p-4">
-              <span class="inline-flex items-center gap-1.5 px-2 py-1 rounded-md text-xs font-medium bg-red-50 text-red-700 animate-pulse">
-                <span class="w-1.5 h-1.5 rounded-full bg-red-500"></span> Overdue
-              </span>
-            </td>
-            <td class="p-4 text-right font-mono text-red-600 font-semibold">80%</td>
-          </tr>
-          <tr class="hover:bg-gray-50/50">
-            <td class="p-4 font-semibold">AUS-2 <span class="text-xs font-normal text-gray-400">(DT)</span></td>
-            <td class="p-4 text-gray-700">Fire Sprinkler/Backflow</td>
-            <td class="p-4 text-gray-500">Annual</td>
-            <td class="p-4 text-gray-500">Nov 03, 2025</td>
-            <td class="p-4 text-gray-500">Nov 03, 2026</td>
-            <td class="p-4">
-              <span class="inline-flex items-center gap-1.5 px-2 py-1 rounded-md text-xs font-medium bg-emerald-50 text-emerald-700">
-                <span class="w-1.5 h-1.5 rounded-full bg-emerald-500"></span> Current
-              </span>
-            </td>
-            <td class="p-4 text-right font-mono text-gray-600">100%</td>
-          </tr>
-        </tbody>
-      </table>
-    </div>
-  </section>
+  <main class="page-body">
 
-  <section class="grid grid-cols-1 md:grid-cols-2 gap-8">
-    
-    <div>
-      <h3 class="text-lg font-bold text-gray-800 mb-4">Operations & Best Practices</h3>
-      <div class="space-y-4">
-        <div class="p-4 bg-white border border-gray-200 rounded-lg">
-          <h4 class="font-semibold text-sm text-gray-900">30-Day Predictive Window</h4>
-          <p class="text-xs text-gray-500 mt-1">Never schedule vendor target actions on the absolute due date. Build an operational buffer to allow room for system failures, required maintenance, or re-testing.</p>
-        </div>
-        <div class="p-4 bg-white border border-gray-200 rounded-lg">
-          <h4 class="font-semibold text-sm text-gray-900">Centralized Proof-of-Compliance</h4>
-          <p class="text-xs text-gray-500 mt-1">If inspectors arrive on-site, missing physical documentation equals an immediate citation. Embed document cloud deeplinks inside your digital compliance table for immediate access.</p>
-        </div>
+    <!-- KPIs -->
+    <div class="kpi-grid">
+      <div class="kpi-card">
+        <div class="kpi-label"><i data-lucide="clipboard-list" width="13" height="13"></i>Total Inspections</div>
+        <div class="kpi-value">24</div>
+        <div class="kpi-delta">Annual schedule · 2 facilities</div>
+      </div>
+      <div class="kpi-card">
+        <div class="kpi-label"><i data-lucide="check-circle-2" width="13" height="13"></i>Completed YTD</div>
+        <div class="kpi-value c-success">17</div>
+        <div class="kpi-delta c-success"><i data-lucide="trending-up" width="11" height="11"></i>70.8% completion rate</div>
+      </div>
+      <div class="kpi-card">
+        <div class="kpi-label"><i data-lucide="clock" width="13" height="13"></i>Due This Month</div>
+        <div class="kpi-value c-warning">5</div>
+        <div class="kpi-delta c-warning"><i data-lucide="alert-circle" width="11" height="11"></i>3 within 14 days</div>
+      </div>
+      <div class="kpi-card">
+        <div class="kpi-label"><i data-lucide="x-circle" width="13" height="13"></i>Overdue Now</div>
+        <div class="kpi-value c-error">2</div>
+        <div class="kpi-delta c-error"><i data-lucide="alert-triangle" width="11" height="11"></i>Immediate action needed</div>
+      </div>
+      <div class="kpi-card">
+        <div class="kpi-label"><i data-lucide="building" width="13" height="13"></i>Bldg A Compliance</div>
+        <div class="kpi-value c-success">72%</div>
+        <div class="kpi-delta">Tech Ridge Blvd</div>
+      </div>
+      <div class="kpi-card">
+        <div class="kpi-label"><i data-lucide="building-2" width="13" height="13"></i>Bldg B Compliance</div>
+        <div class="kpi-value c-warning">67%</div>
+        <div class="kpi-delta">Oak Valley Drive</div>
       </div>
     </div>
 
-    <div>
-      <h3 class="text-lg font-bold text-gray-800 mb-4">Austin Regional Nuances</h3>
-      <div class="space-y-4">
-        <div class="p-4 bg-gray-900 text-white rounded-lg">
-          <div class="flex justify-between items-start">
-            <h4 class="font-semibold text-sm text-gray-100">Austin Fire Dept (AFD) Updates</h4>
-            <span class="text-[10px] bg-red-600 text-white px-1.5 py-0.5 rounded font-mono">LOCAL</span>
-          </div>
-          <p class="text-xs text-gray-400 mt-2">Private fire lines require local backflow preventer certifications recorded directly through the Austin Water Center database annually.</p>
-        </div>
-        <div class="p-4 bg-white border border-gray-200 rounded-lg">
-          <h4 class="font-semibold text-sm text-gray-900">TDLR Elevator Standards</h4>
-          <p class="text-xs text-gray-500 mt-1">Elevator inspections fall under the Texas Department of Licensing and Regulation. Third-party testing must be turned around immediately to print and frame physical wall certificates.</p>
-        </div>
+    <!-- INSPECTION TABLE -->
+    <div class="card">
+      <div class="card-header">
+        <div class="card-title"><i data-lucide="clipboard-check" width="15" height="15"></i>Inspection Schedule — All Items</div>
+        <select id="statusFilter" onchange="renderTable()" style="background:var(--color-surface-offset);border:1px solid var(--color-border);border-radius:var(--radius-sm);padding:4px 10px;font-size:var(--text-xs);color:var(--color-text);cursor:pointer">
+          <option value="all">All Status</option>
+          <option value="overdue">Overdue</option>
+          <option value="upcoming">Upcoming</option>
+          <option value="complete">Complete</option>
+          <option value="scheduled">Scheduled</option>
+        </select>
+      </div>
+      <div style="overflow-x:auto">
+        <table class="t" id="inspTable">
+          <thead><tr>
+            <th>Inspection Type</th><th>Facility</th><th>Last Done</th><th>Due Date</th><th>Days</th><th>Status</th><th>Frequency</th><th>Authority</th>
+          </tr></thead>
+          <tbody id="tBody"></tbody>
+        </table>
+      </div>
+      <div class="card-footer" id="tFooter">Loading...</div>
+    </div>
+
+    <!-- CHARTS -->
+    <div class="row-2">
+      <div class="card">
+        <div class="card-header"><div class="card-title"><i data-lucide="bar-chart-horizontal" width="15" height="15"></i>Completion by Category</div></div>
+        <div class="chart-wrap"><canvas id="catChart"></canvas></div>
+      </div>
+      <div class="card">
+        <div class="card-header"><div class="card-title"><i data-lucide="trending-up" width="15" height="15"></i>Monthly Activity 2026</div></div>
+        <div class="chart-wrap"><canvas id="trendChart"></canvas></div>
       </div>
     </div>
 
-  </section>
+    <!-- PROGRESS + TIMELINE -->
+    <div class="row-2">
+      <div class="card">
+        <div class="card-header">
+          <div class="card-title"><i data-lucide="gauge" width="15" height="15"></i>Completion % by System</div>
+          <span class="badge b-info">YTD 2026</span>
+        </div>
+        <div class="card-body"><div id="progressSection" style="display:flex;flex-direction:column;gap:var(--space-4)"></div></div>
+      </div>
+      <div class="card">
+        <div class="card-header"><div class="card-title"><i data-lucide="calendar" width="15" height="15"></i>Next 30-Day Timeline</div></div>
+        <div class="card-body"><div id="timeline"></div></div>
+      </div>
+    </div>
+
+    <!-- BEST PRACTICES -->
+    <div class="card">
+      <div class="card-header">
+        <div class="card-title"><i data-lucide="star" width="15" height="15"></i>Senior Facilities Manager — Best Practices</div>
+        <span class="badge b-success">NFPA &middot; OSHA &middot; TDI Aligned</span>
+      </div>
+      <div class="card-body"><div class="bp-grid" id="bpGrid"></div></div>
+    </div>
+
+    <!-- COMPLIANCE -->
+    <div class="card">
+      <div class="card-header"><div class="card-title"><i data-lucide="shield-alert" width="15" height="15"></i>Regulatory Framework &amp; Compliance Notes</div></div>
+      <div class="card-body"><div class="comp-list" id="compList"></div></div>
+    </div>
+
+    <!-- VENDORS -->
+    <div class="card">
+      <div class="card-header"><div class="card-title"><i data-lucide="phone" width="15" height="15"></i>Key Vendor / Inspector Contacts</div></div>
+      <div style="overflow-x:auto">
+        <table class="t"><thead><tr><th>Vendor</th><th>Service</th><th>Contact</th><th>Phone</th><th>License</th><th>Next Scheduled</th></tr></thead>
+        <tbody id="vendorBody"></tbody></table>
+      </div>
+    </div>
+
+  </main>
 </div>
+
+<script>
+const TODAY = new Date('2026-06-09');
+function daysUntil(d){return Math.round((new Date(d)-TODAY)/86400000)}
+
+const DATA = [
+  {name:'Fire Alarm Inspection',cat:'Fire Life Safety',fac:'A',fn:'Tech Ridge',last:'2025-12-15',due:'2026-06-15',freq:'Semi-Annual',auth:'NFPA 72 / Austin FD',s:null},
+  {name:'Fire Alarm Inspection',cat:'Fire Life Safety',fac:'B',fn:'Oak Valley',last:'2025-12-20',due:'2026-06-20',freq:'Semi-Annual',auth:'NFPA 72 / Austin FD',s:null},
+  {name:'Fire Sprinkler Inspection',cat:'Fire Life Safety',fac:'A',fn:'Tech Ridge',last:'2026-03-10',due:'2026-09-10',freq:'Semi-Annual',auth:'NFPA 25',s:'complete'},
+  {name:'Fire Sprinkler Inspection',cat:'Fire Life Safety',fac:'B',fn:'Oak Valley',last:'2026-03-15',due:'2026-09-15',freq:'Semi-Annual',auth:'NFPA 25',s:'complete'},
+  {name:'Fire Extinguisher Check',cat:'Fire Life Safety',fac:'A',fn:'Tech Ridge',last:'2026-05-01',due:'2026-06-01',freq:'Monthly',auth:'NFPA 10 / OSHA',s:'overdue'},
+  {name:'Fire Extinguisher Check',cat:'Fire Life Safety',fac:'B',fn:'Oak Valley',last:'2026-06-01',due:'2026-07-01',freq:'Monthly',auth:'NFPA 10 / OSHA',s:'complete'},
+  {name:'Fire Hydrant Flow Test',cat:'Fire Life Safety',fac:'A',fn:'Tech Ridge',last:'2025-06-05',due:'2026-06-05',freq:'Annual',auth:'NFPA 291 / Austin Water',s:'overdue'},
+  {name:'Fire Hydrant Flow Test',cat:'Fire Life Safety',fac:'B',fn:'Oak Valley',last:'2025-08-10',due:'2026-08-10',freq:'Annual',auth:'NFPA 291 / Austin Water',s:null},
+  {name:'Fire Pump Annual Test',cat:'Fire Life Safety',fac:'A',fn:'Tech Ridge',last:'2025-09-20',due:'2026-09-20',freq:'Annual',auth:'NFPA 25',s:null},
+  {name:'Egress / Exit Lighting',cat:'Fire Life Safety',fac:'A',fn:'Tech Ridge',last:'2026-06-01',due:'2026-07-01',freq:'Monthly',auth:'NFPA 101 / IFC',s:'complete'},
+  {name:'Egress / Exit Lighting',cat:'Fire Life Safety',fac:'B',fn:'Oak Valley',last:'2026-05-15',due:'2026-06-15',freq:'Monthly',auth:'NFPA 101 / IFC',s:null},
+  {name:'Elevator Annual Certificate',cat:'Vertical Transport',fac:'A',fn:'Tech Ridge',last:'2025-05-28',due:'2026-05-28',freq:'Annual',auth:'Texas Dept of Insurance',s:'overdue'},
+  {name:'Elevator Annual Certificate',cat:'Vertical Transport',fac:'B',fn:'Oak Valley',last:'2025-07-10',due:'2026-07-10',freq:'Annual',auth:'Texas Dept of Insurance',s:null},
+  {name:'Elevator Quarterly Maint.',cat:'Vertical Transport',fac:'A',fn:'Tech Ridge',last:'2026-04-10',due:'2026-07-10',freq:'Quarterly',auth:'ASME A17.1',s:null},
+  {name:'Elevator Quarterly Maint.',cat:'Vertical Transport',fac:'B',fn:'Oak Valley',last:'2026-04-15',due:'2026-07-15',freq:'Quarterly',auth:'ASME A17.1',s:null},
+  {name:'Backflow Preventer Test',cat:'Mechanical/Plumbing',fac:'A',fn:'Tech Ridge',last:'2025-06-01',due:'2026-06-01',freq:'Annual',auth:'Austin Water Utility',s:'overdue'},
+  {name:'Backflow Preventer Test',cat:'Mechanical/Plumbing',fac:'B',fn:'Oak Valley',last:'2025-06-04',due:'2026-06-04',freq:'Annual',auth:'Austin Water Utility',s:'overdue'},
+  {name:'HVAC Filter & Coil Service',cat:'Mechanical/Plumbing',fac:'A',fn:'Tech Ridge',last:'2026-03-01',due:'2026-06-01',freq:'Quarterly',auth:'ASHRAE 62.1',s:'overdue'},
+  {name:'HVAC Filter & Coil Service',cat:'Mechanical/Plumbing',fac:'B',fn:'Oak Valley',last:'2026-03-10',due:'2026-06-10',freq:'Quarterly',auth:'ASHRAE 62.1',s:null},
+  {name:'Generator Monthly Load Test',cat:'Electrical',fac:'A',fn:'Tech Ridge',last:'2026-05-12',due:'2026-06-12',freq:'Monthly',auth:'NFPA 110',s:null},
+  {name:'Generator Monthly Load Test',cat:'Electrical',fac:'B',fn:'Oak Valley',last:'2026-05-18',due:'2026-06-18',freq:'Monthly',auth:'NFPA 110',s:null},
+  {name:'Electrical Panel Thermographic',cat:'Electrical',fac:'A',fn:'Tech Ridge',last:'2025-09-15',due:'2026-09-15',freq:'Annual',auth:'NFPA 70B / NETA',s:null},
+  {name:'Roof Inspection',cat:'Structural',fac:'A',fn:'Tech Ridge',last:'2026-01-20',due:'2026-07-20',freq:'Semi-Annual',auth:'Local Building Code',s:null},
+  {name:'AED / First Aid Audit',cat:'Life Safety',fac:'A',fn:'Tech Ridge',last:'2026-06-01',due:'2026-07-01',freq:'Monthly',auth:'OSHA 1910.151',s:'complete'},
+];
+
+DATA.forEach(i=>{
+  i.days=daysUntil(i.due);
+  if(!i.s){
+    if(i.days<0)i.s='overdue';
+    else if(i.days<=30)i.s='upcoming';
+    else i.s='scheduled';
+  }
+});
+DATA.sort((a,b)=>a.days-b.days);
+
+let currentFac='all';
+
+function dpill(d){
+  if(d<0)return`<span class="dpill d-ov">${Math.abs(d)}d overdue</span>`;
+  if(d<=14)return`<span class="dpill d-ur">${d}d</span>`;
+  if(d<=30)return`<span class="dpill d-in">${d}d</span>`;
+  return`<span class="dpill d-ok">${d}d</span>`;
+}
+function sbadge(s){
+  const m={overdue:'<span class="badge b-error">⚠ Overdue</span>',complete:'<span class="badge b-success">✓ Complete</span>',upcoming:'<span class="badge b-warn">↑ Upcoming</span>',scheduled:'<span class="badge b-neutral">Scheduled</span>'};
+  return m[s]||m.scheduled;
+}
+
+function renderTable(){
+  const f=document.getElementById('statusFilter').value;
+  let d=DATA.filter(i=>currentFac==='all'||i.fac===currentFac);
+  if(f!=='all')d=d.filter(i=>i.s===f);
+  document.getElementById('tBody').innerHTML=d.map(i=>`
+    <tr>
+      <td><div class="iname">${i.name}</div><div class="imeta">${i.cat}</div></td>
+      <td><span class="badge b-neutral">Bldg ${i.fac}</span> <span style="font-size:var(--text-xs);color:var(--color-text-muted)">${i.fn}</span></td>
+      <td style="color:var(--color-text-muted)">${i.last}</td>
+      <td style="font-weight:600">${i.due}</td>
+      <td>${dpill(i.days)}</td>
+      <td>${sbadge(i.s)}</td>
+      <td style="color:var(--color-text-muted)">${i.freq}</td>
+      <td style="font-size:var(--text-xs);color:var(--color-text-muted)">${i.auth}</td>
+    </tr>`).join('');
+  document.getElementById('tFooter').textContent=`Showing ${d.length} of ${DATA.length} inspections · Sorted by urgency`;
+}
+
+function selectFac(f,el){
+  currentFac=f;
+  document.querySelectorAll('.fac-tab').forEach(t=>t.classList.remove('active'));
+  el.classList.add('active');
+  renderTable();
+}
+
+// PROGRESS
+const PROG=[
+  {label:'Fire Life Safety',pct:75,c:'var(--color-success)'},
+  {label:'Vertical Transport',pct:50,c:'var(--color-warning)'},
+  {label:'Mechanical / Plumbing',pct:33,c:'var(--color-notification)'},
+  {label:'Electrical',pct:100,c:'var(--color-primary)'},
+  {label:'Structural / Life Safety',pct:80,c:'var(--color-gold)'},
+];
+document.getElementById('progressSection').innerHTML=PROG.map(p=>`
+  <div>
+    <div style="display:flex;justify-content:space-between;margin-bottom:4px">
+      <span style="font-size:var(--text-xs);font-weight:600;color:var(--color-text-muted)">${p.label}</span>
+      <span style="font-size:var(--text-xs);font-weight:700;font-variant-numeric:tabular-nums">${p.pct}%</span>
+    </div>
+    <div class="prog-bar"><div class="prog-fill" style="width:${p.pct}%;background:${p.c}"></div></div>
+  </div>`).join('');
+
+// TIMELINE
+const TL=[
+  {date:'Jun 10',title:'Elevator Annual Cert — Bldg A',meta:'12 days OVERDUE · TDI — Schedule NOW',cls:'ov'},
+  {date:'Jun 12',title:'Generator Load Test — Bldg A',meta:'3 days · Monthly · NFPA 110',cls:'pend'},
+  {date:'Jun 13',title:'Backflow Preventer — Bldg B',meta:'5 days OVERDUE · Austin Water',cls:'ov'},
+  {date:'Jun 15',title:'Fire Alarm Inspection — Bldg A',meta:'6 days · Semi-Annual · NFPA 72',cls:'pend'},
+  {date:'Jun 18',title:'Generator Load Test — Bldg B',meta:'9 days · Monthly · NFPA 110',cls:'pend'},
+  {date:'Jun 19',title:'HVAC Filter Service — Bldg B',meta:'10 days · Quarterly · ASHRAE 62.1',cls:'pend'},
+  {date:'Jun 20',title:'Fire Alarm Inspection — Bldg B',meta:'11 days · Semi-Annual · NFPA 72',cls:'pend'},
+  {date:'Jul 1',title:'Fire Extinguisher Check — Bldg A',meta:'22 days · Monthly · NFPA 10',cls:'pend'},
+];
+document.getElementById('timeline').innerHTML=TL.map(t=>`
+  <div class="tl-item">
+    <div class="tl-dot ${t.cls}">${t.cls==='ov'?'!':'·'}</div>
+    <div><div class="tl-title">${t.title}</div><div class="tl-meta">${t.date} · ${t.meta}</div></div>
+  </div>`).join('');
+
+// BEST PRACTICES
+const BPS=[
+  {n:'01',t:'Maintain a Master Inspection Log',d:'Keep one source-of-truth (CMMS or spreadsheet) with every inspection: type, frequency, last date, next due, vendor, and regulatory authority. Retain records 3–7 years per NFPA/OSHA requirements.'},
+  {n:'02',t:'Use 30/14/7-Day Automated Reminders',d:'Set tiered calendar alerts at 30, 14, and 7 days before each deadline. For overdue items, escalate daily until resolved. Austin Fire Dept treats overdue fire system inspections as citation events.'},
+  {n:'03',t:'Verify Vendor Credentials Every Visit',d:'Confirm contractors hold current Texas licenses: TDI for elevators, NICET Level II+ for fire alarms, licensed BAT for backflow. Request updated certificates of insurance naming your facility as additional insured.'},
+  {n:'04',t:'Post Certificates Prominently',d:"TDI elevator certificates must be posted inside the cab by Texas law. Fire alarm and sprinkler tags belong at the control panel. Maintain a physical binder at each building with the current year's inspection records."},
+  {n:'05',t:'Document Deficiencies Same Day',d:'When an inspection reveals a deficiency, document it in writing the same day with a photo, correction deadline, and responsible party. Critical life-safety deficiencies may require notifying the AHJ and making occupancy decisions immediately.'},
+  {n:'06',t:'Conduct Pre-Inspection Walkthroughs',d:'One week before every scheduled inspection, self-audit: confirm fire extinguishers are unobstructed, exit signs illuminated, elevator machine rooms clean, HVAC filters accessible. This dramatically reduces failed inspections and re-test fees.'},
+  {n:'07',t:'Batch Inspections Across Both Buildings',d:'Schedule same-type inspections (e.g., fire extinguisher checks) for both buildings on the same day to consolidate vendor trips and reduce per-inspection travel costs. Use the 30-day window before/after annual due dates strategically.'},
+  {n:'08',t:'Build a 12-Month Rolling Budget',d:'Forecast all inspection costs: elevator ~$800–$1,500/yr, fire alarm ~$500–$1,500/building, backflow ~$150–$400/device. Maintain a 15% contingency for re-inspections after remediation.'},
+  {n:'09',t:'Know Your Austin Regulatory Contacts',d:'Texas Dept of Insurance (elevators): 512-305-7900. Austin Fire Prevention Division: 512-974-0130. Austin Water (backflow): 512-972-0400. Keep these on speed-dial — proactive communication prevents citations.'},
+  {n:'10',t:'Annual Safety Committee Review',d:'Hold a formal annual review with department heads: all inspection results, open work orders, near-miss incidents, and upcoming regulatory changes. Document minutes and distribute to ownership/leadership. Required for ISO 45001 alignment.'},
+];
+document.getElementById('bpGrid').innerHTML=BPS.map(b=>`
+  <div class="bp-item">
+    <div class="bp-num">Best Practice ${b.n}</div>
+    <div class="bp-title">${b.t}</div>
+    <div class="bp-text">${b.d}</div>
+  </div>`).join('');
+
+// COMPLIANCE
+const COMP=[
+  {t:'crit',title:'Texas Dept of Insurance — Elevator Annual Certificate',desc:'TDI requires a current Certificate of Inspection posted inside every elevator cab. Operating without it is a violation subject to fines and forced shutdown. Bldg A is currently 12 DAYS OVERDUE. Contact: TDI Elevator Safety, 512-305-7900.'},
+  {t:'warn',title:'NFPA 72 — Fire Alarm Testing (Austin Fire Dept)',desc:'Austin FD enforces NFPA 72, requiring semi-annual testing for commercial fire alarm systems. A licensed fire alarm company (NICET Level II minimum) must sign off all tests. Records retained on-site for 3 years minimum.'},
+  {t:'warn',title:'Austin Water Utility — Backflow Preventer Annual Test',desc:'Annual testing of all backflow prevention assemblies required by a Licensed BAT. Results must be submitted to Austin Water within 30 days of the test. Failure to comply results in service discontinuation notices. Both buildings currently overdue.'},
+  {t:'ok',title:'NFPA 25 — Fire Sprinkler System Inspection',desc:'Semi-annual inspection required by NFPA 25. All valves must remain open; supervisory signals must be operational. Both Bldg A and B completed March 2026 — COMPLIANT through September 2026.'},
+  {t:'ok',title:'NFPA 10 — Portable Fire Extinguisher Program',desc:'Monthly visual inspections (staff-performed) confirm pressure gauge in green, pin/seal intact, no damage. Annual maintenance by a certified company required. 6-year and hydrostatic test cycles apply. Bldg B currently COMPLIANT.'},
+  {t:'warn',title:'OSHA / Insurance — Electrical Thermographic Survey',desc:'Annual infrared scan of electrical panels is required by most commercial insurance carriers (not strictly OSHA-mandated) and aligns with NFPA 70B. Identifies hot spots before failures. Next due: Bldg A September 2026.'},
+];
+document.getElementById('compList').innerHTML=COMP.map(c=>`
+  <div class="comp-item">
+    <div class="comp-icon ${c.t}">${c.t==='crit'?'<i data-lucide="alert-octagon" width="13" height="13"></i>':c.t==='warn'?'<i data-lucide="alert-triangle" width="13" height="13"></i>':'<i data-lucide="check-circle" width="13" height="13"></i>'}</div>
+    <div><div class="comp-title">${c.title}</div><div class="comp-desc">${c.desc}</div></div>
+  </div>`).join('');
+
+// VENDORS
+const VENDORS=[
+  {v:'Texas Elevator Services',s:'Elevator Inspection & Maintenance',c:'Mike Torres',p:'512-448-2100',l:'TDI Certified',n:'Jun 10, 2026'},
+  {v:'Austin Fire Protection LLC',s:'Fire Alarm / Sprinkler / Extinguishers',c:'Linda Choi',p:'512-555-0182',l:'NICET Level III',n:'Jun 15, 2026'},
+  {v:'Clear Flow Testing',s:'Backflow Preventer Annual Test',c:'David Ruiz',p:'512-555-0341',l:'TX BAT #BF-4821',n:'Jun 10, 2026'},
+  {v:'ThermalScan Austin',s:'Electrical Thermographic Survey',c:'Amy Nelson',p:'512-555-0274',l:'NETA Certified',n:'Sep 15, 2026'},
+  {v:'Aire Pro HVAC',s:'HVAC Service & Filter Replacement',c:'James Park',p:'512-555-0195',l:'TACCA Member',n:'Jun 19, 2026'},
+  {v:'Peak Generator Service',s:'Generator Testing & Maintenance',c:'Carlos Vega',p:'512-555-0422',l:'EGSA Certified',n:'Jun 12, 2026'},
+];
+document.getElementById('vendorBody').innerHTML=VENDORS.map(v=>`
+  <tr>
+    <td style="font-weight:600">${v.v}</td>
+    <td style="color:var(--color-text-muted)">${v.s}</td>
+    <td>${v.c}</td>
+    <td style="font-family:var(--font-mono);font-size:var(--text-xs)">${v.p}</td>
+    <td><span class="badge b-info">${v.l}</span></td>
+    <td style="font-weight:600;color:var(--color-warning)">${v.n}</td>
+  </tr>`).join('');
+
+// CHARTS
+Chart.defaults.font.family='Inter,sans-serif';
+Chart.defaults.font.size=11;
+const gc=n=>getComputedStyle(document.documentElement).getPropertyValue(n).trim();
+
+new Chart(document.getElementById('catChart'),{
+  type:'bar',
+  data:{
+    labels:['Fire Life\nSafety','Vertical\nTransport','Mech /\nPlumbing','Electrical','Structural\n/ Life Safety'],
+    datasets:[
+      {label:'Complete',data:[5,0,0,3,2],backgroundColor:'rgba(109,170,69,0.85)',borderRadius:4,borderSkipped:false},
+      {label:'Overdue / Upcoming',data:[3,1,4,0,0],backgroundColor:'rgba(221,105,116,0.85)',borderRadius:4,borderSkipped:false},
+      {label:'Scheduled',data:[3,4,0,0,1],backgroundColor:'rgba(79,152,163,0.4)',borderRadius:4,borderSkipped:false},
+    ]
+  },
+  options:{responsive:true,maintainAspectRatio:false,plugins:{legend:{labels:{color:'#797876',boxWidth:10,padding:12}}},scales:{x:{stacked:true,grid:{display:false},ticks:{color:'#797876'}},y:{stacked:true,grid:{color:'rgba(150,150,140,0.1)'},ticks:{color:'#797876',stepSize:2}}}}
+});
+
+new Chart(document.getElementById('trendChart'),{
+  type:'line',
+  data:{
+    labels:['Jan','Feb','Mar','Apr','May','Jun'],
+    datasets:[
+      {label:'Completed',data:[3,2,4,3,3,2],borderColor:'rgba(109,170,69,0.9)',backgroundColor:'rgba(109,170,69,0.08)',tension:0.4,fill:true,pointRadius:4,pointBackgroundColor:'rgba(109,170,69,0.9)'},
+      {label:'Overdue at Month End',data:[0,0,1,0,1,4],borderColor:'rgba(221,105,116,0.9)',backgroundColor:'rgba(221,105,116,0.06)',tension:0.4,fill:true,pointRadius:4,pointBackgroundColor:'rgba(221,105,116,0.9)'},
+    ]
+  },
+  options:{responsive:true,maintainAspectRatio:false,plugins:{legend:{labels:{color:'#797876',boxWidth:10,padding:12}}},scales:{x:{grid:{display:false},ticks:{color:'#797876'}},y:{grid:{color:'rgba(150,150,140,0.1)'},ticks:{color:'#797876',stepSize:1}}}}
+});
+
+// INIT
+renderTable();
+lucide.createIcons();
+
+// THEME
+let theme='dark';
+function toggleTheme(){
+  theme=theme==='dark'?'light':'dark';
+  document.documentElement.setAttribute('data-theme',theme);
+  document.getElementById('theme-btn').innerHTML=theme==='dark'
+    ?'<svg width="17" height="17" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M21 12.79A9 9 0 1 1 11.21 3 7 7 0 0 0 21 12.79z"/></svg>'
+    :'<svg width="17" height="17" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><circle cx="12" cy="12" r="5"/><path d="M12 1v2M12 21v2M4.22 4.22l1.42 1.42M18.36 18.36l1.42 1.42M1 12h2M21 12h2M4.22 19.78l1.42-1.42M18.36 5.64l1.42-1.42"/></svg>';
+}
+</script>
+</body>
+</html>
